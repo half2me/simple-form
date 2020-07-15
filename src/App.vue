@@ -2,7 +2,7 @@
   q-layout(view="hHh lpR fFf")
     q-page-container
       .q-pa-md
-        q-form(@submit="onSubmit" @reset="onReset").q-gutter-md
+        q-form(@submit="onSubmit" @reset="onReset" ref="myForm").q-gutter-md
           q-input(v-model="newRow.name" label="Name" required lazy-rules :rules="[ val => val && val.length > 0 || 'Please type your name']")
           q-input(v-model="newRow.dob" label="Date of Birth" required type="date" lazy-rules)
           q-input(v-model="newRow.email" label="Email" required type="email")
@@ -35,7 +35,10 @@ export default {
       },
       search: '',
       pagination: {
-
+        sortBy: 'name',
+        descending: false,
+        page: 1,
+        rowsPerPage: 15,
       },
       columns: [
         {
@@ -74,7 +77,14 @@ export default {
   asyncComputed: {
     people: {
       get() {
-        return axios.get('http://127.0.0.1:8000/').then(d => d.data);
+        return axios.get('http://127.0.0.1:8000/', {
+          params: {
+            page: this.pagination.page,
+            size: this.pagination.rowsPerPage,
+            order_by: this.pagination.order_by,
+            dir: this.pagination.descending ? 'desc' : 'asc',
+          },
+        }).then(d => d.data);
       },
       default() {
         return [];
@@ -84,7 +94,13 @@ export default {
 
   methods: {
     onSubmit() {
-      console.log(this.newRow);
+      axios
+        .post('http://127.0.0.1:8000/', this.newRow)
+        .finally(() => {
+          this.onReset();
+          this.$refs.myForm.resetValidation();
+          this.$asyncComputed.people.update();
+        })
     },
     onReset() {
       this.newRow = {
