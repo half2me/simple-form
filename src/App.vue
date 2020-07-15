@@ -11,7 +11,7 @@
             q-btn(label="Submit" type="submit" color="primary")
             q-btn(label="Reset" type="reset" color="primary" flat).q-ml-sm
         hr
-        q-table(title="Rows" :data="rows" :columns="columns" row-key="id" :pagination="pagination")
+        q-table(title="People" :data="people" :columns="columns" row-key="id" :pagination="pagination")
           template(v-slot:top-right)
             q-input(borderless dense debounce="300" v-model="search" placeholder="Search")
               template(v-slot:append)
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+
+import axios from 'axios'
 
 export default {
   name: 'LayoutDefault',
@@ -66,11 +68,18 @@ export default {
           field: row => row.noc,
         },
       ],
-      rows: [
-        { id: 1, name: 'Testy Tester', dob: '1993 06 11', email: 'yolo@gmail.com', noc: 2 },
-        { id: 2, name: 'Testy Tester1', dob: '1993 06 11', email: 'yolo@gmail.com', noc: 2 },
-      ],
     }
+  },
+
+  asyncComputed: {
+    people: {
+      get() {
+        return axios.get('http://127.0.0.1:8000/').then(d => d.data);
+      },
+      default() {
+        return [];
+      },
+    },
   },
 
   methods: {
