@@ -16,6 +16,8 @@
             q-input(borderless dense debounce="300" v-model="search" placeholder="Search")
               template(v-slot:append)
                 q-icon(name="search")
+        hr
+        p Rows are currently sorted by #[strong {{ pagination.sortBy }} {{ pagination.descending ? 'desc' : 'asc'}}].
 </template>
 
 <script>
