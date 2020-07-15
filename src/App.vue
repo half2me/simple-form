@@ -11,7 +11,7 @@
             q-btn(label="Submit" type="submit" color="primary")
             q-btn(label="Reset" type="reset" color="primary" flat).q-ml-sm
         hr
-        q-table(title="People" :data="people" :columns="columns" row-key="id" :pagination="pagination")
+        q-table(title="People" :data="people" :columns="columns" row-key="id" :pagination.sync="pagination")
           template(v-slot:top-right)
             q-input(borderless dense debounce="300" v-model="search" placeholder="Search")
               template(v-slot:append)
@@ -83,6 +83,7 @@ export default {
             size: this.pagination.rowsPerPage,
             order_by: this.pagination.order_by,
             dir: this.pagination.descending ? 'desc' : 'asc',
+            filter: this.search,
           },
         }).then(d => d.data);
       },
