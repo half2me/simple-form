@@ -83,7 +83,7 @@ export default {
             size: this.pagination.rowsPerPage,
             order_by: this.pagination.order_by,
             dir: this.pagination.descending ? 'desc' : 'asc',
-            filter: this.search,
+            search: this.search,
           },
         }).then(d => d.data);
       },
